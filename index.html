@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHECK IN NHÂN SỰ</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f5f5f5;
+    color: #111;
+}
+
+.header {
+    background: #ffd400;
+    padding: 22px 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.header p {
+    margin: 8px 0 0;
+    font-size: 15px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 12px;
+    background: #ffd400;
+    color: #111;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: .85;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f1f1f1;
+    border-radius: 12px;
+    display: none;
+}
+
+.success {
+    color: #087f23;
+    font-weight: bold;
+}
+
+.time {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #777;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>THẾ GIỚI DI ĐỘNG</h1>
+    <p>HỘ PHÒNG • CHECK IN NHÂN SỰ</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+
+        <h2 style="text-align:center;">
+            📍 CHECK IN
+        </h2>
+
+        <label>Mã User</label>
+        <input
+            type="text"
+            id="user"
+            placeholder="Ví dụ: 46055"
+        >
+
+        <label>Họ và tên</label>
+        <input
+            type="text"
+            id="name"
+            placeholder="Nhập họ và tên"
+        >
+
+        <button onclick="checkIn()">
+            ✅ CHECK IN NGAY
+        </button>
+
+        <div id="result" class="result"></div>
+
+    </div>
+
+    <div class="footer">
+        Hệ thống Check In nhân sự
+    </div>
+
+</div>
+
+<script>
+
+function checkIn() {
+
+    const user = document.getElementById("user").value.trim();
+    const name = document.getElementById("name").value.trim();
+
+    if (user === "" || name === "") {
+        alert("Vui lòng nhập đầy đủ User và Họ tên!");
+        return;
+    }
+
+    const now = new Date();
+
+    const time =
+        now.toLocaleDateString("vi-VN") +
+        " • " +
+        now.toLocaleTimeString("vi-VN");
+
+    const data = {
+        user: user,
+        name: name,
+        time: time
+    };
+
+    localStorage.setItem("checkin", JSON.stringify(data));
+
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("result").innerHTML = `
+        <div class="success">
+            ✅ CHECK IN THÀNH CÔNG
+        </div>
+
+        <div style="margin-top:10px;">
+            <b>User:</b> ${user}
+        </div>
+
+        <div>
+            <b>Họ tên:</b> ${name}
+        </div>
+
+        <div class="time">
+            🕐 ${time}
+        </div>
+    `;
+}
+
+</script>
+
+</body>
+</html>
