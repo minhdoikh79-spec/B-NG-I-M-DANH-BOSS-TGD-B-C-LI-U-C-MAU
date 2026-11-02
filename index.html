@@ -3,199 +3,947 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHECK IN NHÂN SỰ</title>
+<title>Bảng Điểm Danh BOSS</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#f5f7fb;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    color:#172033;
 }
 
-body {
-    margin: 0;
-    background: #f5f5f5;
-    color: #111;
+.app{
+    max-width:980px;
+    margin:auto;
+    padding:10px;
 }
 
-.header {
-    background: #ffd400;
-    padding: 22px 15px;
-    text-align: center;
-    font-weight: bold;
+.card{
+    background:white;
+    border-radius:18px;
+    margin-bottom:14px;
+    padding:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 26px;
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
-.header p {
-    margin: 8px 0 0;
-    font-size: 15px;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
-.container {
-    max-width: 500px;
-    margin: 25px auto;
-    padding: 0 15px;
+.logo{
+    width:52px;
+    height:52px;
+    border-radius:14px;
+    background:#4169e1;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
 }
 
-.card {
-    background: white;
-    border-radius: 18px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+.title{
+    font-size:25px;
+    font-weight:800;
 }
 
-label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 7px;
-    font-weight: bold;
+.clock{
+    display:inline-block;
+    margin-top:7px;
+    padding:6px 12px;
+    border-radius:10px;
+    background:#f1f5ff;
+    color:#4f46e5;
+    font-size:19px;
+    font-weight:bold;
 }
 
-input {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-size: 16px;
+.admin{
+    border:2px solid #f59e0b;
+    background:#fff7d6;
+    color:#b45309;
+    border-radius:25px;
+    padding:11px 18px;
+    font-weight:800;
+    font-size:17px;
 }
 
-button {
-    width: 100%;
-    padding: 15px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 12px;
-    background: #ffd400;
-    color: #111;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
+.admin.active{
+    background:#fde68a;
 }
 
-button:hover {
-    opacity: .85;
+.admin-only{
+    display:none!important;
 }
 
-.result {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f1f1f1;
-    border-radius: 12px;
-    display: none;
+.admin-mode .admin-only{
+    display:inline-flex!important;
 }
 
-.success {
-    color: #087f23;
-    font-weight: bold;
+.board-title{
+    font-size:20px;
+    font-weight:800;
+    color:#64748b;
 }
 
-.time {
-    font-size: 14px;
-    margin-top: 5px;
+select{
+    width:100%;
+    margin-top:10px;
+    padding:13px;
+    border:2px solid #d6dfeb;
+    border-radius:12px;
+    background:#f8fafc;
+    font-weight:700;
 }
 
-.footer {
-    text-align: center;
-    margin-top: 25px;
-    color: #777;
-    font-size: 13px;
+.actions{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+    margin-top:13px;
+}
+
+button{
+    cursor:pointer;
+    font-family:inherit;
+}
+
+.btn{
+    border:0;
+    border-radius:12px;
+    padding:11px 15px;
+    font-weight:800;
+}
+
+.share{
+    background:#eef2f8;
+    color:#26334a;
+}
+
+.primary{
+    background:#4f46e5;
+    color:white;
+}
+
+.orange{
+    background:#f59e0b;
+    color:white;
+}
+
+.green{
+    background:#10b981;
+    color:white;
+}
+
+.gray{
+    background:#eef2f8;
+    color:#26334a;
+}
+
+.table{
+    overflow:hidden;
+    padding:0;
+}
+
+.head{
+    display:grid;
+    grid-template-columns:45px 1fr 45px 150px 145px;
+    gap:8px;
+    padding:13px 10px;
+    background:#eef3f9;
+    color:#64748b;
+    font-weight:900;
+}
+
+.person{
+    display:grid;
+    grid-template-columns:45px 1fr 45px 150px 145px;
+    gap:8px;
+    align-items:center;
+    padding:10px;
+    border-top:1px solid #e2e8f0;
+}
+
+.person.checked{
+    background:#f3fffa;
+}
+
+.stt{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#f1f5f9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    color:#64748b;
+}
+
+.name{
+    font-size:18px;
+    font-weight:800;
+}
+
+.iconbtn{
+    border:0;
+    background:transparent;
+    font-size:20px;
+}
+
+.check{
+    border:2px solid #cbd5e1;
+    border-radius:11px;
+    padding:9px 8px;
+    background:#f8fafc;
+    color:#64748b;
+    font-weight:800;
+}
+
+.check.done{
+    border-color:#10b981;
+    background:#ecfdf5;
+    color:#047857;
+}
+
+.time{
+    text-align:center;
+    padding:9px;
+    border-radius:10px;
+    background:#ecfdf5;
+    color:#059669;
+    font-weight:900;
+}
+
+.time.off{
+    background:white;
+    border:2px dashed #cbd5e1;
+    color:#94a3b8;
+}
+
+.stats{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+.badge{
+    padding:7px 10px;
+    border-radius:20px;
+    font-weight:800;
+    font-size:14px;
+}
+
+.total{
+    background:#eef2ff;
+    color:#4338ca;
+}
+
+.done{
+    background:#ecfdf5;
+    color:#047857;
+}
+
+.todo{
+    background:#fff7ed;
+    color:#c2410c;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+    z-index:999;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.box{
+    width:min(450px,100%);
+    background:white;
+    border-radius:18px;
+    padding:20px;
+}
+
+.box h2{
+    margin-top:0;
+}
+
+.box input{
+    width:100%;
+    padding:13px;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    margin:8px 0 14px;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+}
+
+.modal-actions button{
+    flex:1;
+}
+
+.footer{
+    text-align:center;
+    color:#94a3b8;
+    font-size:13px;
+    padding:10px;
+}
+
+@media(max-width:650px){
+
+    .title{
+        font-size:21px;
+    }
+
+    .admin{
+        font-size:14px;
+        padding:9px 12px;
+    }
+
+    .head,
+    .person{
+        grid-template-columns:35px 1fr 35px 120px 105px;
+        gap:5px;
+    }
+
+    .name{
+        font-size:16px;
+    }
+
+    .check{
+        font-size:12px;
+        padding:8px 4px;
+    }
+
+    .time{
+        font-size:12px;
+        padding:8px 3px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-    <h1>THẾ GIỚI DI ĐỘNG</h1>
-    <p>HỘ PHÒNG • CHECK IN NHÂN SỰ</p>
+<div class="app">
+
+<div class="card header">
+
+<div class="brand">
+
+<div class="logo">☑</div>
+
+<div>
+<div class="title">Bảng Điểm Danh BOSS</div>
+<div class="clock" id="clock">--:--:--</div>
 </div>
 
-<div class="container">
+</div>
 
-    <div class="card">
-
-        <h2 style="text-align:center;">
-            📍 CHECK IN
-        </h2>
-
-        <label>Mã User</label>
-        <input
-            type="text"
-            id="user"
-            placeholder="Ví dụ: 46055"
-        >
-
-        <label>Họ và tên</label>
-        <input
-            type="text"
-            id="name"
-            placeholder="Nhập họ và tên"
-        >
-
-        <button onclick="checkIn()">
-            ✅ CHECK IN NGAY
-        </button>
-
-        <div id="result" class="result"></div>
-
-    </div>
-
-    <div class="footer">
-        Hệ thống Check In nhân sự
-    </div>
+<button class="admin" id="adminBtn" onclick="toggleAdmin()">👑 ADMIN</button>
 
 </div>
+
+
+<div class="card">
+
+<div class="board-title">📋 Danh sách:</div>
+
+<select id="boardSelect" onchange="changeBoard()"></select>
+
+<div class="actions">
+
+<button class="btn share" onclick="shareLink()">🔗 Chia Sẻ Link</button>
+
+<button class="btn primary admin-only" onclick="newBoard()">＋ Bảng Mới</button>
+
+</div>
+
+<div class="stats" id="stats"></div>
+
+</div>
+
+
+<div class="card">
+
+<div class="actions">
+
+<button class="btn primary admin-only" onclick="checkAll()">✅ Check Tất Cả</button>
+
+<button class="btn gray admin-only" onclick="uncheckAll()">🔄 Bỏ Check</button>
+
+<button class="btn orange" onclick="copyUnchecked()">📋 Copy Tag Chưa Check</button>
+
+<button class="btn green admin-only" onclick="addBoss()">＋ Thêm Boss</button>
+
+</div>
+
+</div>
+
+
+<div class="card table">
+
+<div class="head">
+<div>STT</div>
+<div>BOSS</div>
+<div></div>
+<div>CHECK</div>
+<div>TIME</div>
+</div>
+
+<div id="list"></div>
+
+</div>
+
+<div class="footer">
+Bảng điểm danh BOSS • Chỉ ADMIN được chỉnh sửa danh sách
+</div>
+
+</div>
+
+
+<div class="modal" id="modal">
+
+<div class="box">
+
+<h2 id="modalTitle">Thêm Boss</h2>
+
+<input id="modalInput" placeholder="Ví dụ: Hoa_7721">
+
+<div class="modal-actions">
+
+<button class="btn gray" onclick="closeModal()">Hủy</button>
+
+<button class="btn green" onclick="saveModal()">Lưu</button>
+
+</div>
+
+</div>
+
+</div>
+
 
 <script>
 
-function checkIn() {
+const STORAGE="BOSS_CHECKIN_DATA";
 
-    const user = document.getElementById("user").value.trim();
-    const name = document.getElementById("name").value.trim();
+let state=JSON.parse(localStorage.getItem(STORAGE)||"null");
 
-    if (user === "" || name === "") {
-        alert("Vui lòng nhập đầy đủ User và Họ tên!");
-        return;
-    }
+if(!state){
 
-    const now = new Date();
+state={
+active:"Bảng Chính (Mặc định)",
 
-    const time =
-        now.toLocaleDateString("vi-VN") +
-        " • " +
-        now.toLocaleTimeString("vi-VN");
+boards:{
+"Bảng Chính (Mặc định)":[
+"Hoa_7721",
+"An_59690",
+"Thi_51929",
+"Ngoan_21966",
+"Tâm_146168",
+"Phi_161470",
+"Sơn_7699",
+"Thảo_40924",
+"Nhãn_7712",
+"Quy_63172"
+]
+},
 
-    const data = {
-        user: user,
-        name: name,
-        time: time
-    };
+checks:{}
 
-    localStorage.setItem("checkin", JSON.stringify(data));
+};
 
-    document.getElementById("result").style.display = "block";
+save();
 
-    document.getElementById("result").innerHTML = `
-        <div class="success">
-            ✅ CHECK IN THÀNH CÔNG
-        </div>
-
-        <div style="margin-top:10px;">
-            <b>User:</b> ${user}
-        </div>
-
-        <div>
-            <b>Họ tên:</b> ${name}
-        </div>
-
-        <div class="time">
-            🕐 ${time}
-        </div>
-    `;
 }
+
+
+let admin=localStorage.getItem("BOSS_ADMIN")==="1";
+
+let editIndex=-1;
+
+
+function save(){
+
+localStorage.setItem(STORAGE,JSON.stringify(state));
+
+}
+
+
+function list(){
+
+return state.boards[state.active]||[];
+
+}
+
+
+function timeNow(){
+
+return new Date().toLocaleTimeString("vi-VN",{
+hour12:false
+});
+
+}
+
+
+function renderBoards(){
+
+let select=document.getElementById("boardSelect");
+
+select.innerHTML="";
+
+Object.keys(state.boards).forEach(name=>{
+
+let option=document.createElement("option");
+
+option.value=name;
+
+option.textContent="📌 "+name;
+
+if(name===state.active)
+option.selected=true;
+
+select.appendChild(option);
+
+});
+
+}
+
+
+function render(){
+
+renderBoards();
+
+let arr=list();
+
+let container=document.getElementById("list");
+
+container.innerHTML="";
+
+
+arr.forEach((name,index)=>{
+
+let id=state.active+"_"+index;
+
+let checked=!!state.checks[id];
+
+let time=state.checks[id]||"--:--:--";
+
+let row=document.createElement("div");
+
+row.className="person "+(checked?"checked":"");
+
+row.innerHTML=`
+
+<div class="stt">${index+1}</div>
+
+<div class="name">${escapeHTML(name)}</div>
+
+<button class="iconbtn admin-only" onclick="editBoss(${index})">✏️</button>
+
+<button class="check ${checked?"done":""}" onclick="toggleCheck(${index})">
+
+${checked?"✅ Đã Check":"⚪ Chưa Check"}
+
+</button>
+
+<div class="time ${checked?"":"off"}">
+
+${time}
+
+</div>
+
+`;
+
+container.appendChild(row);
+
+});
+
+
+let done=arr.filter((_,i)=>
+state.checks[state.active+"_"+i]
+).length;
+
+document.getElementById("stats").innerHTML=`
+
+<span class="badge total">👥 Tổng: ${arr.length}</span>
+
+<span class="badge done">✅ Đã Check: ${done}</span>
+
+<span class="badge todo">⏳ Chưa Check: ${arr.length-done}</span>
+
+`;
+
+document.body.classList.toggle("admin-mode",admin);
+
+document.getElementById("adminBtn").classList.toggle("active",admin);
+
+}
+
+
+function escapeHTML(text){
+
+return text.replace(/[&<>"']/g,function(m){
+
+return {
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[m];
+
+});
+
+}
+
+
+function toggleCheck(index){
+
+let id=state.active+"_"+index;
+
+if(state.checks[id]){
+
+delete state.checks[id];
+
+}else{
+
+state.checks[id]=timeNow();
+
+}
+
+save();
+
+render();
+
+}
+
+
+function checkAll(){
+
+if(!admin){
+
+alert("Chỉ ADMIN mới được sử dụng chức năng này.");
+
+return;
+
+}
+
+list().forEach((_,i)=>{
+
+state.checks[state.active+"_"+i]=timeNow();
+
+});
+
+save();
+
+render();
+
+}
+
+
+function uncheckAll(){
+
+if(!admin){
+
+alert("Chỉ ADMIN mới được sử dụng chức năng này.");
+
+return;
+
+}
+
+list().forEach((_,i)=>{
+
+delete state.checks[state.active+"_"+i];
+
+});
+
+save();
+
+render();
+
+}
+
+
+function copyUnchecked(){
+
+let text=list()
+
+.filter((_,i)=>!state.checks[state.active+"_"+i])
+
+.map(n=>"@"+n)
+
+.join(" ");
+
+if(!text){
+
+alert("Tất cả Boss đã Check!");
+
+return;
+
+}
+
+navigator.clipboard.writeText(text)
+
+.then(()=>alert("Đã Copy danh sách Boss chưa Check!"))
+
+.catch(()=>prompt("Copy nội dung:",text));
+
+}
+
+
+function addBoss(){
+
+if(!admin){
+
+alert("Chỉ ADMIN mới được thêm Boss.");
+
+return;
+
+}
+
+editIndex=-1;
+
+document.getElementById("modalTitle").textContent="＋ Thêm Boss";
+
+document.getElementById("modalInput").value="";
+
+document.getElementById("modal").classList.add("show");
+
+}
+
+
+function editBoss(index){
+
+if(!admin){
+
+alert("Chỉ ADMIN mới được sửa.");
+
+return;
+
+}
+
+editIndex=index;
+
+document.getElementById("modalTitle").textContent="✏️ Sửa Boss";
+
+document.getElementById("modalInput").value=list()[index];
+
+document.getElementById("modal").classList.add("show");
+
+}
+
+
+function saveModal(){
+
+if(!admin){
+
+alert("Chỉ ADMIN mới được chỉnh sửa.");
+
+return;
+
+}
+
+let value=document.getElementById("modalInput").value.trim();
+
+if(!value){
+
+alert("Vui lòng nhập tên Boss.");
+
+return;
+
+}
+
+if(editIndex===-1){
+
+state.boards[state.active].push(value);
+
+}else{
+
+state.boards[state.active][editIndex]=value;
+
+}
+
+save();
+
+closeModal();
+
+render();
+
+}
+
+
+function closeModal(){
+
+document.getElementById("modal").classList.remove("show");
+
+}
+
+
+function deleteBoss(index){
+
+if(!admin){
+
+alert("Chỉ ADMIN mới được xóa.");
+
+return;
+
+}
+
+if(confirm("Xóa Boss "+list()[index]+"?")){
+
+state.boards[state.active].splice(index,1);
+
+save();
+
+render();
+
+}
+
+}
+
+
+function newBoard(){
+
+if(!admin){
+
+alert("Chỉ ADMIN mới được tạo bảng.");
+
+return;
+
+}
+
+let name=prompt("Nhập tên bảng mới:");
+
+if(!name)return;
+
+if(state.boards[name]){
+
+alert("Tên bảng đã tồn tại.");
+
+return;
+
+}
+
+state.boards[name]=[];
+
+state.active=name;
+
+save();
+
+render();
+
+}
+
+
+function changeBoard(){
+
+state.active=document.getElementById("boardSelect").value;
+
+save();
+
+render();
+
+}
+
+
+function shareLink(){
+
+let url=location.href;
+
+if(navigator.share){
+
+navigator.share({
+
+title:"Bảng Điểm Danh BOSS",
+
+url:url
+
+});
+
+}else{
+
+navigator.clipboard.writeText(url);
+
+alert("Đã Copy Link!");
+
+}
+
+}
+
+
+function toggleAdmin(){
+
+if(admin){
+
+admin=false;
+
+localStorage.removeItem("BOSS_ADMIN");
+
+alert("Đã thoát ADMIN.");
+
+render();
+
+return;
+
+}
+
+let password=prompt("🔐 Nhập mật khẩu ADMIN:");
+
+if(password==="123456"){
+
+admin=true;
+
+localStorage.setItem("BOSS_ADMIN","1");
+
+alert("✅ Đăng nhập ADMIN thành công!");
+
+render();
+
+}else{
+
+if(password!==null)
+
+alert("❌ Sai mật khẩu ADMIN!");
+
+}
+
+}
+
+
+function updateClock(){
+
+document.getElementById("clock").textContent=timeNow();
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+render();
 
 </script>
 
