@@ -2,322 +2,394 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Điểm Danh BOSS - TGDD Hộ Phòng</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Điểm Danh BOSS - TGDD</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
 *{
   box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 body{
-  margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:#f3f4f6;
-  color:#111827;
+  background:#f5f5f5;
+  color:#222;
 }
 
 .header{
   background:#ffd400;
-  padding:16px 20px;
+  padding:14px 16px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 8px #999;
+}
+
+.header-top{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:10px;
-  position:sticky;
-  top:0;
-  z-index:10;
-  box-shadow:0 2px 8px #0002;
 }
 
-.header h1{
-  margin:0;
-  font-size:23px;
-  font-weight:800;
+.logo{
+  font-size:20px;
+  font-weight:900;
+}
+
+.title{
+  font-size:24px;
+  font-weight:900;
+  margin-top:5px;
 }
 
 .clock{
-  font-size:14px;
+  font-size:13px;
   font-weight:bold;
-  text-align:right;
+  background:#111;
+  color:#fff;
+  padding:7px 10px;
+  border-radius:8px;
+  white-space:nowrap;
 }
 
 .container{
-  max-width:1200px;
+  max-width:1050px;
   margin:auto;
   padding:15px;
 }
 
-.card{
-  background:white;
+.toolbar{
+  background:#fff;
   border-radius:14px;
-  padding:16px;
-  margin-bottom:15px;
-  box-shadow:0 2px 10px #0001;
-}
-
-.topbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-
-input,select,button{
-  font:inherit;
-}
-
-input,select{
-  border:1px solid #d1d5db;
-  border-radius:9px;
-  padding:11px 12px;
-  background:white;
-}
-
-button{
-  border:0;
-  border-radius:9px;
-  padding:11px 15px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.btn-yellow{
-  background:#ffd400;
-  color:#111;
-}
-
-.btn-dark{
-  background:#111827;
-  color:white;
-}
-
-.btn-green{
-  background:#16a34a;
-  color:white;
-}
-
-.btn-red{
-  background:#dc2626;
-  color:white;
-}
-
-.btn-blue{
-  background:#2563eb;
-  color:white;
-}
-
-button:disabled{
-  opacity:.45;
-  cursor:not-allowed;
+  padding:12px;
+  box-shadow:0 2px 8px #ddd;
+  margin-bottom:14px;
 }
 
 .search{
   width:100%;
-  max-width:450px;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-top:15px;
-}
-
-.stat{
-  background:#f9fafb;
-  border-radius:12px;
-  padding:14px;
-  text-align:center;
-  border:1px solid #e5e7eb;
-}
-
-.stat b{
-  display:block;
-  font-size:24px;
-  margin-top:5px;
-}
-
-.deadline{
-  margin-top:12px;
-  padding:12px;
-  background:#fff7ed;
-  border:1px solid #fed7aa;
+  padding:12px 14px;
+  border:1px solid #ddd;
   border-radius:10px;
+  font-size:16px;
+  outline:none;
+}
+
+.search:focus{
+  border-color:#ffd400;
+}
+
+.info{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:10px;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.count{
   font-weight:bold;
+}
+
+.admin-btn{
+  background:#111;
+  color:#fff;
+  border:0;
+  padding:9px 13px;
+  border-radius:9px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.admin-btn:hover{
+  opacity:.85;
 }
 
 .admin-panel{
   display:none;
-}
-
-.admin-panel.show{
-  display:block;
-}
-
-.admin-box{
-  background:#111827;
-  color:white;
+  background:#fff;
+  border:2px solid #ffd400;
   border-radius:14px;
-  padding:16px;
-  margin-bottom:15px;
+  padding:12px;
+  margin-bottom:14px;
+  box-shadow:0 2px 8px #ddd;
 }
 
-.admin-box h2{
-  margin-top:0;
+.admin-title{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.admin-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+
+.btn{
+  border:0;
+  padding:11px 10px;
+  border-radius:9px;
+  font-weight:bold;
+  cursor:pointer;
+  background:#111;
+  color:#fff;
+}
+
+.btn.yellow{
+  background:#ffd400;
+  color:#111;
+}
+
+.btn.red{
+  background:#d60000;
+  color:#fff;
+}
+
+.btn.green{
+  background:#198754;
+  color:#fff;
+}
+
+.btn.blue{
+  background:#0d6efd;
+  color:#fff;
+}
+
+.file-label{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:11px;
+  border-radius:9px;
+  background:#ffd400;
+  color:#111;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.file-label input{
+  display:none;
+}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.card{
+  background:#fff;
+  border-radius:13px;
+  padding:12px;
+  box-shadow:0 2px 6px #ddd;
+  border-left:5px solid #ffd400;
+}
+
+.card.checked{
+  border-left-color:#198754;
+  background:#f1fff6;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.person{
+  min-width:0;
+  flex:1;
+}
+
+.name{
+  font-size:17px;
+  font-weight:900;
+  margin-bottom:3px;
+}
+
+.user{
+  font-size:12px;
+  color:#666;
+  font-weight:bold;
+}
+
+.store{
+  font-size:13px;
+  margin-top:6px;
+  color:#333;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.province{
+  display:inline-block;
+  margin-top:5px;
+  background:#eee;
+  border-radius:5px;
+  padding:3px 6px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.check-btn{
+  min-width:105px;
+  border:0;
+  padding:10px 8px;
+  border-radius:9px;
+  background:#ffd400;
+  color:#111;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.check-btn.done{
+  background:#198754;
+  color:#fff;
+}
+
+.check-btn:disabled{
+  opacity:.7;
+  cursor:not-allowed;
+}
+
+.time{
+  font-size:11px;
+  color:#198754;
+  font-weight:bold;
+  margin-top:5px;
 }
 
 .admin-actions{
   display:flex;
-  gap:8px;
-  flex-wrap:wrap;
+  gap:5px;
+  margin-top:8px;
 }
 
-.table-wrap{
-  overflow-x:auto;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:900px;
-}
-
-th{
-  background:#111827;
-  color:white;
-  padding:11px 8px;
-  text-align:left;
-}
-
-td{
-  padding:10px 8px;
-  border-bottom:1px solid #e5e7eb;
-  vertical-align:middle;
-}
-
-tr.checked{
-  background:#ecfdf5;
-}
-
-.badge{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:12px;
+.small-btn{
+  border:0;
+  padding:6px 9px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:11px;
   font-weight:bold;
 }
 
-.badge-ok{
-  background:#dcfce7;
-  color:#166534;
+.edit{
+  background:#111;
+  color:#fff;
 }
 
-.badge-no{
-  background:#fee2e2;
-  color:#991b1b;
+.delete{
+  background:#e00000;
+  color:#fff;
 }
 
-.badge-admin{
-  background:#fef3c7;
-  color:#92400e;
+.empty{
+  background:#fff;
+  border-radius:12px;
+  padding:30px;
+  text-align:center;
+  color:#777;
 }
 
-.check-btn{
-  background:#16a34a;
-  color:white;
-  padding:8px 12px;
+.loading{
+  text-align:center;
+  padding:30px;
+  font-weight:bold;
 }
 
-.checked-btn{
-  background:#6b7280;
-  color:white;
-  padding:8px 12px;
-}
-
-.small{
-  font-size:12px;
-  color:#6b7280;
-}
-
-.modal{
+.modal-bg{
   display:none;
   position:fixed;
   inset:0;
-  background:#0008;
-  z-index:100;
+  background:rgba(0,0,0,.6);
+  z-index:500;
   align-items:center;
   justify-content:center;
   padding:15px;
 }
 
-.modal.show{
-  display:flex;
-}
-
-.modal-content{
+.modal{
+  background:#fff;
   width:100%;
-  max-width:480px;
-  background:white;
+  max-width:460px;
   border-radius:15px;
-  padding:20px;
+  padding:18px;
 }
 
-.modal-content h2{
-  margin-top:0;
+.modal h2{
+  margin-bottom:12px;
 }
 
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+.input{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:9px;
+  margin-bottom:9px;
+  font-size:15px;
 }
 
-.form-grid .full{
-  grid-column:1/-1;
+.modal-buttons{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
 }
 
-.empty{
+.modal-buttons button{
+  flex:1;
+}
+
+.status{
   text-align:center;
-  padding:35px;
-  color:#6b7280;
+  padding:8px;
+  font-size:13px;
+  font-weight:bold;
+  color:#555;
 }
 
-.footer{
-  text-align:center;
-  color:#6b7280;
+.admin-on{
+  background:#198754;
+  color:#fff;
+  padding:6px 9px;
+  border-radius:7px;
   font-size:12px;
-  padding:20px;
+  font-weight:bold;
 }
 
-@media(max-width:700px){
-  .header{
-    align-items:flex-start;
-  }
-
-  .header h1{
-    font-size:18px;
+@media(max-width:600px){
+  .title{
+    font-size:20px;
   }
 
   .clock{
     font-size:11px;
   }
 
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .form-grid{
+  .admin-grid{
     grid-template-columns:1fr;
   }
 
-  .form-grid .full{
-    grid-column:auto;
+  .name{
+    font-size:16px;
+  }
+
+  .check-btn{
+    min-width:95px;
+    font-size:12px;
   }
 }
 </style>
@@ -325,186 +397,108 @@ tr.checked{
 
 <body>
 
-<div class="header">
-  <h1>📋 ĐIỂM DANH BOSS - TGDD HỘ PHÒNG</h1>
-  <div>
-    <div class="clock" id="clock">--:--:--</div>
-    <div class="small" id="firebaseStatus">Đang kết nối...</div>
+<header class="header">
+  <div class="header-top">
+    <div>
+      <div class="logo">THẾ GIỚI DI ĐỘNG</div>
+      <div class="title">BẢNG ĐIỂM DANH BOSS</div>
+    </div>
+
+    <div id="clock" class="clock">--:--:--</div>
   </div>
-</div>
+</header>
 
 <div class="container">
 
-  <!-- KHU VỰC CHÍNH -->
-  <div class="card">
+  <div class="toolbar">
+    <input
+      id="search"
+      class="search"
+      type="text"
+      placeholder="🔎 Tìm BOSS, User, siêu thị..."
+      oninput="render()"
+    >
 
-    <div class="topbar">
+    <div class="info">
+      <div id="count" class="count">Đang tải...</div>
 
-      <input
-        id="searchInput"
-        class="search"
-        placeholder="🔎 Tìm BOSS, tên, User, siêu thị..."
-        oninput="render()"
-      >
+      <div>
+        <span id="adminStatus"></span>
+        <button class="admin-btn" onclick="openAdmin()">⚙ ADMIN</button>
+      </div>
+    </div>
+  </div>
 
-      <select id="provinceFilter" onchange="render()">
-        <option value="">Tất cả tỉnh</option>
-        <option value="CÀ MAU">CÀ MAU</option>
-        <option value="BẠC LIÊU">BẠC LIÊU</option>
-      </select>
+  <div id="adminPanel" class="admin-panel">
 
-      <button class="btn-dark" onclick="openAdminLogin()">
-        🔐 ADMIN
+    <div class="admin-title">
+      ⚙ QUẢN LÝ DANH SÁCH
+    </div>
+
+    <div class="admin-grid">
+
+      <label class="file-label">
+        📥 NHẬP FILE EXCEL
+        <input
+          id="excelFile"
+          type="file"
+          accept=".xlsx,.xls,.csv"
+          onchange="importExcel(event)"
+        >
+      </label>
+
+      <button class="btn green" onclick="exportExcel()">
+        📤 XUẤT EXCEL
+      </button>
+
+      <button class="btn yellow" onclick="openAdd()">
+        ＋ THÊM BOSS
+      </button>
+
+      <button class="btn blue" onclick="clearAllAttendance()">
+        🔄 XÓA ĐIỂM DANH
+      </button>
+
+      <button class="btn red" onclick="logoutAdmin()">
+        🚪 THOÁT ADMIN
       </button>
 
     </div>
 
-    <div class="stats">
-      <div class="stat">
-        Tổng BOSS
-        <b id="totalCount">0</b>
-      </div>
-
-      <div class="stat">
-        Đã điểm danh
-        <b id="checkedCount">0</b>
-      </div>
-
-      <div class="stat">
-        Chưa điểm danh
-        <b id="uncheckedCount">0</b>
-      </div>
-
-      <div class="stat">
-        Tỷ lệ
-        <b id="percentCount">0%</b>
-      </div>
-    </div>
-
-    <div class="deadline" id="deadlineBox">
-      ⏰ Chưa đặt thời gian hết hạn điểm danh.
-    </div>
+    <div id="adminMessage" class="status"></div>
 
   </div>
 
-  <!-- ADMIN -->
-  <div class="admin-panel" id="adminPanel">
-
-    <div class="admin-box">
-
-      <h2>🔐 KHU VỰC ADMIN</h2>
-
-      <div class="small" style="color:#d1d5db;margin-bottom:12px">
-        Chỉ tài khoản ADMIN mới có quyền chỉnh sửa danh sách.
-      </div>
-
-      <div class="admin-actions">
-
-        <button class="btn-yellow" onclick="document.getElementById('excelFile').click()">
-          📥 Nhập File Excel
-        </button>
-
-        <input
-          type="file"
-          id="excelFile"
-          accept=".xlsx,.xls,.csv"
-          style="display:none"
-          onchange="importExcel(event)"
-        >
-
-        <button class="btn-green" onclick="openAddModal()">
-          ➕ Thêm BOSS
-        </button>
-
-        <button class="btn-blue" onclick="openDeadlineModal()">
-          ⏰ Đặt thời gian Check
-        </button>
-
-        <button class="btn-red" onclick="clearDeadline()">
-          ❌ Hủy thời gian
-        </button>
-
-        <button class="btn-green" onclick="exportExcel()">
-          📊 Xuất EXCEL
-        </button>
-
-        <button class="btn-dark" onclick="logoutAdmin()">
-          🚪 Đăng xuất
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- DANH SÁCH -->
-  <div class="card">
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>USER</th>
-            <th>BOSS / TÊN</th>
-            <th>TỈNH</th>
-            <th>SIÊU THỊ</th>
-            <th>TRẠNG THÁI</th>
-            <th>THỜI GIAN</th>
-            <th>THAO TÁC</th>
-            <th id="adminHead" style="display:none">ADMIN</th>
-          </tr>
-        </thead>
-
-        <tbody id="tableBody"></tbody>
-
-      </table>
-
-    </div>
-
+  <div id="list" class="list">
+    <div class="loading">⏳ Đang kết nối...</div>
   </div>
 
 </div>
 
-<div class="footer">
-  TGDD Hộ Phòng • Hệ thống điểm danh dùng chung
-</div>
 
+<!-- LOGIN ADMIN -->
+<div id="loginModal" class="modal-bg">
 
-<!-- MODAL ADMIN -->
-<div class="modal" id="adminModal">
+  <div class="modal">
 
-  <div class="modal-content">
-
-    <h2>🔐 Đăng nhập ADMIN</h2>
-
-    <p class="small">
-      Nhập mật khẩu ADMIN để quản lý danh sách.
-    </p>
+    <h2>🔐 ĐĂNG NHẬP ADMIN</h2>
 
     <input
       id="adminPassword"
+      class="input"
       type="password"
-      placeholder="Mật khẩu ADMIN"
-      style="width:100%"
+      placeholder="Nhập mật khẩu Admin"
       onkeydown="if(event.key==='Enter') loginAdmin()"
     >
 
-    <div style="height:12px"></div>
-
-    <div style="display:flex;gap:8px">
-
-      <button class="btn-yellow" onclick="loginAdmin()">
-        Đăng nhập
+    <div class="modal-buttons">
+      <button class="btn" onclick="closeModal('loginModal')">
+        HỦY
       </button>
 
-      <button class="btn-dark" onclick="closeModal('adminModal')">
-        Hủy
+      <button class="btn yellow" onclick="loginAdmin()">
+        ĐĂNG NHẬP
       </button>
-
     </div>
 
   </div>
@@ -512,100 +506,29 @@ tr.checked{
 </div>
 
 
-<!-- MODAL BOSS -->
-<div class="modal" id="bossModal">
+<!-- ADD / EDIT -->
+<div id="bossModal" class="modal-bg">
 
-  <div class="modal-content">
+  <div class="modal">
 
-    <h2 id="bossModalTitle">➕ Thêm BOSS</h2>
+    <h2 id="bossModalTitle">＋ THÊM BOSS</h2>
 
-    <input type="hidden" id="editKey">
+    <input id="bossId" class="input" placeholder="User / BOSS - VD: 146155 - Đời">
 
-    <div class="form-grid">
+    <input id="bossName" class="input" placeholder="Tên hiển thị">
 
-      <div>
-        <label>User</label>
-        <input id="bossUser" placeholder="VD: 146155" style="width:100%">
-      </div>
+    <input id="bossProvince" class="input" placeholder="Tỉnh - VD: BẠC LIÊU">
 
-      <div>
-        <label>Tên BOSS</label>
-        <input id="bossName" placeholder="VD: Đời" style="width:100%">
-      </div>
+    <input id="bossStore" class="input" placeholder="Siêu thị - VD: 976 - Hộ Phòng">
 
-      <div>
-        <label>Tỉnh</label>
-        <select id="bossProvince" style="width:100%">
-          <option value="BẠC LIÊU">BẠC LIÊU</option>
-          <option value="CÀ MAU">CÀ MAU</option>
-        </select>
-      </div>
+    <div class="modal-buttons">
 
-      <div>
-        <label>Siêu thị</label>
-        <input id="bossStore" placeholder="VD: 976 - Hộ Phòng" style="width:100%">
-      </div>
-
-      <div class="full">
-
-        <label>Họ tên hiển thị</label>
-
-        <input
-          id="bossDisplay"
-          placeholder="VD: Đời_146155"
-          style="width:100%"
-        >
-
-      </div>
-
-    </div>
-
-    <div style="height:15px"></div>
-
-    <div style="display:flex;gap:8px">
-
-      <button class="btn-green" onclick="saveBoss()">
-        💾 Lưu
+      <button class="btn" onclick="closeModal('bossModal')">
+        HỦY
       </button>
 
-      <button class="btn-dark" onclick="closeModal('bossModal')">
-        Hủy
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- MODAL DEADLINE -->
-<div class="modal" id="deadlineModal">
-
-  <div class="modal-content">
-
-    <h2>⏰ Thời gian hết hạn Check</h2>
-
-    <p class="small">
-      Sau thời gian này nhân viên sẽ không thể điểm danh.
-    </p>
-
-    <input
-      type="datetime-local"
-      id="deadlineInput"
-      style="width:100%"
-    >
-
-    <div style="height:15px"></div>
-
-    <div style="display:flex;gap:8px">
-
-      <button class="btn-green" onclick="saveDeadline()">
-        💾 Lưu thời gian
-      </button>
-
-      <button class="btn-dark" onclick="closeModal('deadlineModal')">
-        Hủy
+      <button class="btn yellow" onclick="saveBoss()">
+        LƯU
       </button>
 
     </div>
@@ -637,131 +560,27 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-const ADMIN_EMAIL = "admin@tgddhopphong.com";
-
-let currentUser = null;
-let isAdmin = false;
-let roster = {};
-let attendance = {};
-let deadline = null;
-
 
 /* =========================================================
-   DỮ LIỆU MẶC ĐỊNH
+   ADMIN
 ========================================================= */
 
-const DEFAULT_ROSTER = {
+const ADMIN_EMAIL = "admin@tgddhopphong.com";
 
-  "hien_61601":{
-    user:"61601",
-    name:"Hiền_61601",
-    province:"CÀ MAU",
-    store:"13740 - TGD_CMA_CMA - 52 Nguyễn Trãi"
-  },
-
-  "qui_38826":{
-    user:"38826",
-    name:"Quí_38826",
-    province:"CÀ MAU",
-    store:"681 - TGD_CMA_CMA - 125B Nguyễn Tất Thành"
-  },
-
-  "trang_45704":{
-    user:"45704",
-    name:"Trang_45704",
-    province:"CÀ MAU",
-    store:"1317 - TGD_CMA_CMA - 255 Quốc Lộ 1A (Tắc Vân)"
-  },
-
-  "mai_27034":{
-    user:"27034",
-    name:"Mãi_27034",
-    province:"CÀ MAU",
-    store:"1331 - TGD_CMA_DDO - 57 Dương Thị Cẩm Vân"
-  },
-
-  "oanh_24182":{
-    user:"24182",
-    name:"Oanh_24182",
-    province:"CÀ MAU",
-    store:"183 - TGD_CMA_CMA - 2A Trần Hưng Đạo"
-  },
-
-  "phuong_4092":{
-    user:"4092",
-    name:"Phương_4092",
-    province:"CÀ MAU",
-    store:"7180 - TGD_CMA_TVT - Sông Đốc 2"
-  },
-
-  "linh_7704":{
-    user:"7704",
-    name:"Linh_7704",
-    province:"CÀ MAU",
-    store:"1372 - TGD_CMA_TVT - Trần Văn Thời"
-  },
-
-  "lyly_56702":{
-    user:"56702",
-    name:"Lyly_56702",
-    province:"CÀ MAU",
-    store:"3865 - TGD_CMA_NCA - Nguyễn Tất Thành"
-  },
-
-  "an_51741":{
-    user:"51741",
-    name:"An_51741",
-    province:"BẠC LIÊU",
-    store:"1088 - TGD_BLI_HDA - Ngan Dừa (Hồng Dân)"
-  },
-
-  "vinh_74825":{
-    user:"74825",
-    name:"Vinh_74825",
-    province:"BẠC LIÊU",
-    store:"126 - TGD_BLI_GRA - 472 Phường 1 (Giá Rai)"
-  },
-
-  "khanh_23517":{
-    user:"23517",
-    name:"Khánh_23517",
-    province:"BẠC LIÊU",
-    store:"568 - TGD_BLI_HBI - 03 Quốc Lộ 1A (Hòa Bình)"
-  },
-
-  "doi_146155":{
-    user:"146155",
-    name:"Đời_146155",
-    province:"BẠC LIÊU",
-    store:"976 - TGD_BLI_GRA - Hộ Phòng"
-  },
-
-  "dang_56228":{
-    user:"56228",
-    name:"Đặng_56228",
-    province:"BẠC LIÊU",
-    store:"1966 - TGD_BLI_DHA - Gành Hào"
-  },
-
-  "nha_38845":{
-    user:"38845",
-    name:"Nhã_38845",
-    province:"BẠC LIÊU",
-    store:"7020 - TGD_BLI_BLI - 378 Trần Phú"
-  },
-
-  "dat_49412":{
-    user:"49412",
-    name:"Đạt_49412",
-    province:"BẠC LIÊU",
-    store:"684 - TGD_BLI_BLI - C1B Trần Phú"
-  }
-
-};
+let admin = false;
+let currentEditKey = null;
 
 
 /* =========================================================
-   NGÀY
+   DATA
+========================================================= */
+
+let roster = {};
+let attendance = {};
+
+
+/* =========================================================
+   NGÀY VIỆT NAM
 ========================================================= */
 
 function todayKey(){
@@ -769,9 +588,7 @@ function todayKey(){
   const d = new Date();
 
   const y = d.getFullYear();
-
   const m = String(d.getMonth()+1).padStart(2,"0");
-
   const day = String(d.getDate()).padStart(2,"0");
 
   return `${y}-${m}-${day}`;
@@ -779,14 +596,70 @@ function todayKey(){
 
 
 /* =========================================================
-   KHỞI ĐỘNG
+   FORMAT THỜI GIAN
+========================================================= */
+
+function formatTime(timestamp){
+
+  if(!timestamp) return "";
+
+  const d = new Date(timestamp);
+
+  return d.toLocaleString("vi-VN",{
+    day:"2-digit",
+    month:"2-digit",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit",
+    second:"2-digit"
+  });
+
+}
+
+
+/* =========================================================
+   ĐỒNG HỒ
+========================================================= */
+
+function updateClock(){
+
+  const now = new Date();
+
+  document.getElementById("clock").textContent =
+    now.toLocaleString("vi-VN",{
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit",
+      second:"2-digit"
+    });
+
+}
+
+setInterval(updateClock,1000);
+updateClock();
+
+
+/* =========================================================
+   AUTH
 ========================================================= */
 
 auth.onAuthStateChanged(async user => {
 
-  currentUser = user;
+  if(user){
 
-  if(!user){
+    admin = user.email === ADMIN_EMAIL;
+
+    updateAdminUI();
+
+    await loadData();
+
+  }else{
+
+    admin = false;
+
+    updateAdminUI();
 
     try{
 
@@ -796,64 +669,392 @@ auth.onAuthStateChanged(async user => {
 
       console.error(error);
 
-      document.getElementById("firebaseStatus").innerText =
-        "❌ Chưa bật Anonymous Authentication";
-
-      return;
+      document.getElementById("list").innerHTML =
+        `<div class="empty">
+          ❌ Không thể kết nối hệ thống.<br>
+          Vui lòng kiểm tra Firebase.
+        </div>`;
 
     }
 
-    return;
   }
-
-  checkAdminStatus();
-
-  loadData();
 
 });
 
 
 /* =========================================================
-   KIỂM TRA ADMIN
+   LOAD DATA
 ========================================================= */
 
-async function checkAdminStatus(){
+async function loadData(){
 
-  if(!currentUser){
-    isAdmin = false;
-    return;
+  try{
+
+    const rosterSnap = await db.ref("roster").once("value");
+
+    roster = rosterSnap.val() || {};
+
+    const attendanceSnap =
+      await db.ref("attendance/" + todayKey()).once("value");
+
+    attendance = attendanceSnap.val() || {};
+
+    render();
+
+  }catch(error){
+
+    console.error(error);
+
+    document.getElementById("list").innerHTML =
+      `<div class="empty">
+        ❌ Không tải được danh sách.<br>
+        ${error.message}
+      </div>`;
+
   }
 
-  isAdmin = !!(
-    currentUser.email &&
-    currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
-  );
-
-  updateAdminUI();
 }
 
 
 /* =========================================================
-   ĐĂNG NHẬP ADMIN
+   REALTIME ROSTER
 ========================================================= */
 
-function openAdminLogin(){
+db.ref("roster").on("value",snap=>{
 
-  if(isAdmin){
+  roster = snap.val() || {};
 
-    updateAdminUI();
+  render();
 
-    window.scrollTo({
-      top:0,
-      behavior:"smooth"
-    });
+});
+
+
+/* =========================================================
+   REALTIME ĐIỂM DANH
+========================================================= */
+
+db.ref("attendance/" + todayKey()).on("value",snap=>{
+
+  attendance = snap.val() || {};
+
+  render();
+
+});
+
+
+/* =========================================================
+   HIỂN THỊ
+========================================================= */
+
+function render(){
+
+  const list = document.getElementById("list");
+
+  const search =
+    document.getElementById("search").value
+    .trim()
+    .toLowerCase();
+
+  const arr = Object.entries(roster);
+
+  let filtered = arr.filter(([key,item])=>{
+
+    item = item || {};
+
+    const text = [
+
+      key,
+      item.user,
+      item.boss,
+      item.name,
+      item.province,
+      item.store
+
+    ].join(" ").toLowerCase();
+
+    return text.includes(search);
+
+  });
+
+
+  filtered.sort((a,b)=>{
+
+    const A = a[1] || {};
+    const B = b[1] || {};
+
+    return String(A.name || A.boss || "")
+      .localeCompare(
+        String(B.name || B.boss || ""),
+        "vi"
+      );
+
+  });
+
+
+  const total = arr.length;
+
+  const checked =
+    arr.filter(([key])=>attendance[key]).length;
+
+  document.getElementById("count").textContent =
+    `Tổng ${total} BOSS • Đã điểm danh ${checked}/${total}`;
+
+
+  if(!filtered.length){
+
+    list.innerHTML =
+      `<div class="empty">
+        ${total ? "🔎 Không tìm thấy BOSS phù hợp." :
+        "📋 Chưa có danh sách. ADMIN hãy nhập file Excel."}
+      </div>`;
 
     return;
+
   }
 
-  document.getElementById("adminPassword").value = "";
 
-  document.getElementById("adminModal").classList.add("show");
+  list.innerHTML = filtered.map(([key,item])=>{
+
+    item = item || {};
+
+    const data = attendance[key];
+
+    const isChecked = !!data;
+
+    const name =
+      item.name ||
+      item.boss ||
+      item.user ||
+      key;
+
+    const user =
+      item.user ||
+      item.boss ||
+      key;
+
+    const province =
+      item.province || "";
+
+    const store =
+      item.store || "";
+
+
+    return `
+
+      <div class="card ${isChecked ? "checked" : ""}">
+
+        <div class="row">
+
+          <div class="person">
+
+            <div class="name">
+              ${escapeHtml(name)}
+            </div>
+
+            <div class="user">
+              USER: ${escapeHtml(user)}
+            </div>
+
+            <div class="store">
+              🏪 ${escapeHtml(shortStore(store))}
+            </div>
+
+            ${
+              province
+              ?
+              `<span class="province">
+                ${escapeHtml(province)}
+              </span>`
+              :
+              ""
+            }
+
+            ${
+              isChecked
+              ?
+              `<div class="time">
+                ✅ ${formatTime(data.time)}
+              </div>`
+              :
+              ""
+            }
+
+          </div>
+
+
+          <button
+            class="check-btn ${isChecked ? "done" : ""}"
+            ${isChecked ? "disabled" : ""}
+            onclick="checkIn('${escapeAttr(key)}')"
+          >
+            ${isChecked ? "✓ ĐÃ ĐIỂM" : "ĐIỂM DANH"}
+          </button>
+
+        </div>
+
+
+        ${
+          admin
+          ?
+          `<div class="admin-actions">
+
+            <button
+              class="small-btn edit"
+              onclick="editBoss('${escapeAttr(key)}')"
+            >
+              ✏ Sửa
+            </button>
+
+            <button
+              class="small-btn delete"
+              onclick="deleteBoss('${escapeAttr(key)}')"
+            >
+              🗑 Xóa
+            </button>
+
+          </div>`
+          :
+          ""
+        }
+
+      </div>
+
+    `;
+
+  }).join("");
+
+}
+
+
+/* =========================================================
+   RÚT GỌN SIÊU THỊ
+========================================================= */
+
+function shortStore(store){
+
+  if(!store) return "";
+
+  let s = String(store).trim();
+
+  /*
+    Ví dụ:
+    976 - TGD_BLI_GRA - Hộ Phòng
+
+    Hiển thị:
+    976 - Hộ Phòng
+  */
+
+  const parts = s
+    .split("-")
+    .map(x=>x.trim())
+    .filter(Boolean);
+
+  if(parts.length >= 3){
+
+    return parts[0] + " - " + parts[parts.length-1];
+
+  }
+
+  return s;
+
+}
+
+
+/* =========================================================
+   CHECK IN
+========================================================= */
+
+async function checkIn(key){
+
+  if(!auth.currentUser){
+
+    alert("Đang kết nối hệ thống. Vui lòng thử lại.");
+
+    return;
+
+  }
+
+
+  if(attendance[key]){
+
+    alert("BOSS này đã điểm danh.");
+
+    return;
+
+  }
+
+
+  const item = roster[key] || {};
+
+  const data = {
+
+    uid: auth.currentUser.uid,
+
+    user:
+      item.user ||
+      item.boss ||
+      key,
+
+    name:
+      item.name ||
+      item.boss ||
+      "",
+
+    province:
+      item.province ||
+      "",
+
+    store:
+      item.store ||
+      "",
+
+    time: firebase.database.ServerValue.TIMESTAMP
+
+  };
+
+
+  try{
+
+    await db.ref(
+      "attendance/" + todayKey() + "/" + key
+    ).set(data);
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "❌ Điểm danh thất bại.\n\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
+
+function openAdmin(){
+
+  if(admin){
+
+    const panel =
+      document.getElementById("adminPanel");
+
+    panel.style.display =
+      panel.style.display === "block"
+      ? "none"
+      : "block";
+
+    return;
+
+  }
+
+  document.getElementById("loginModal").style.display =
+    "flex";
 
   setTimeout(()=>{
     document.getElementById("adminPassword").focus();
@@ -865,14 +1066,16 @@ function openAdminLogin(){
 async function loginAdmin(){
 
   const password =
-    document.getElementById("adminPassword").value.trim();
+    document.getElementById("adminPassword").value;
 
   if(!password){
 
-    alert("Vui lòng nhập mật khẩu ADMIN.");
+    alert("Vui lòng nhập mật khẩu.");
 
     return;
+
   }
+
 
   try{
 
@@ -881,23 +1084,18 @@ async function loginAdmin(){
       password
     );
 
-    isAdmin = true;
+    closeModal("loginModal");
 
-    closeModal("adminModal");
+    document.getElementById("adminPassword").value = "";
 
-    updateAdminUI();
-
-    alert("✅ Đăng nhập ADMIN thành công!");
+    alert("✅ Đăng nhập ADMIN thành công.");
 
   }catch(error){
 
     console.error(error);
 
     alert(
-      "❌ Không đăng nhập được ADMIN.\n\n" +
-      "Kiểm tra Firebase Authentication đã có:\n" +
-      "admin@tgddhopphong.com\n" +
-      "mật khẩu: 146155"
+      "❌ Sai mật khẩu hoặc tài khoản Admin chưa đúng."
     );
 
   }
@@ -906,61 +1104,30 @@ async function loginAdmin(){
 
 
 /* =========================================================
-   ĐĂNG XUẤT ADMIN
-========================================================= */
-
-async function logoutAdmin(){
-
-  try{
-
-    await auth.signOut();
-
-    isAdmin = false;
-
-    updateAdminUI();
-
-    await auth.signInAnonymously();
-
-    alert("Đã đăng xuất ADMIN.");
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-
-}
-
-
-/* =========================================================
-   UI ADMIN
+   ADMIN UI
 ========================================================= */
 
 function updateAdminUI(){
 
+  const status =
+    document.getElementById("adminStatus");
+
   const panel =
     document.getElementById("adminPanel");
 
-  const adminHead =
-    document.getElementById("adminHead");
 
-  if(isAdmin){
+  if(admin){
 
-    panel.classList.add("show");
+    status.innerHTML =
+      `<span class="admin-on">ADMIN ĐANG ĐĂNG NHẬP</span>`;
 
-    adminHead.style.display = "";
-
-    document.getElementById("firebaseStatus").innerText =
-      "🟢 ADMIN";
+    panel.style.display = "block";
 
   }else{
 
-    panel.classList.remove("show");
+    status.innerHTML = "";
 
-    adminHead.style.display = "none";
-
-    document.getElementById("firebaseStatus").innerText =
-      "🟢 Đã kết nối";
+    panel.style.display = "none";
 
   }
 
@@ -970,640 +1137,118 @@ function updateAdminUI(){
 
 
 /* =========================================================
-   LOAD DATA
+   LOGOUT
 ========================================================= */
 
-function loadData(){
+async function logoutAdmin(){
 
-  db.ref("roster").on("value",snapshot=>{
+  if(!confirm("Thoát quyền ADMIN?")) return;
 
-    if(snapshot.exists()){
-
-      roster = snapshot.val() || {};
-
-    }else{
-
-      roster = DEFAULT_ROSTER;
-
-      if(isAdmin){
-
-        db.ref("roster").set(DEFAULT_ROSTER);
-
-      }
-
-    }
-
-    render();
-
-  },error=>{
-
-    console.error(error);
-
-    document.getElementById("firebaseStatus").innerText =
-      "❌ Lỗi Database";
-
-  });
-
-
-  db.ref("settings/deadline").on("value",snapshot=>{
-
-    deadline = snapshot.val() || null;
-
-    renderDeadline();
-
-    render();
-
-  });
-
-
-  db.ref("attendance/"+todayKey()).on("value",snapshot=>{
-
-    attendance = snapshot.val() || {};
-
-    render();
-
-  });
+  await auth.signOut();
 
 }
 
 
 /* =========================================================
-   DEADLINE
+   THÊM BOSS
 ========================================================= */
 
-function renderDeadline(){
+function openAdd(){
 
-  const box =
-    document.getElementById("deadlineBox");
-
-  if(!deadline){
-
-    box.innerHTML =
-      "⏰ Chưa đặt thời gian hết hạn điểm danh.";
-
-    return;
-  }
-
-  const time =
-    new Date(deadline).getTime();
-
-  if(Date.now() >= time){
-
-    box.innerHTML =
-      "🔴 ĐÃ HẾT THỜI GIAN ĐIỂM DANH";
-
-    return;
-  }
-
-  box.innerHTML =
-    "🟢 Điểm danh đến: " +
-    new Date(deadline).toLocaleString("vi-VN");
-
-}
-
-
-function isDeadlineOver(){
-
-  if(!deadline) return false;
-
-  return Date.now() >= new Date(deadline).getTime();
-
-}
-
-
-/* =========================================================
-   ADMIN DEADLINE
-========================================================= */
-
-function openDeadlineModal(){
-
-  if(!isAdmin){
-
-    alert("Chỉ ADMIN mới được đặt thời gian.");
-
-    return;
-  }
-
-  document.getElementById("deadlineInput").value =
-    deadline ? toDatetimeLocal(deadline) : "";
-
-  document.getElementById("deadlineModal").classList.add("show");
-
-}
-
-
-function toDatetimeLocal(value){
-
-  const d = new Date(value);
-
-  const y = d.getFullYear();
-
-  const m = String(d.getMonth()+1).padStart(2,"0");
-
-  const day = String(d.getDate()).padStart(2,"0");
-
-  const h = String(d.getHours()).padStart(2,"0");
-
-  const min = String(d.getMinutes()).padStart(2,"0");
-
-  return `${y}-${m}-${day}T${h}:${min}`;
-
-}
-
-
-async function saveDeadline(){
-
-  if(!isAdmin){
-
-    alert("Không có quyền.");
-
-    return;
-  }
-
-  const value =
-    document.getElementById("deadlineInput").value;
-
-  if(!value){
-
-    alert("Vui lòng chọn thời gian.");
-
-    return;
-  }
-
-  try{
-
-    await db.ref("settings/deadline").set(value);
-
-    closeModal("deadlineModal");
-
-    alert("✅ Đã đặt thời gian hết hạn.");
-
-  }catch(error){
-
-    console.error(error);
-
-    alert("❌ Không thể lưu thời gian.");
-
-  }
-
-}
-
-
-async function clearDeadline(){
-
-  if(!isAdmin){
-
-    alert("Chỉ ADMIN mới được thực hiện.");
-
-    return;
-  }
-
-  if(!confirm("Hủy thời gian hết hạn điểm danh?")) return;
-
-  try{
-
-    await db.ref("settings/deadline").remove();
-
-    alert("✅ Đã hủy thời gian.");
-
-  }catch(error){
-
-    console.error(error);
-
-    alert("❌ Không thể hủy.");
-
-  }
-
-}
-
-
-/* =========================================================
-   RENDER
-========================================================= */
-
-function render(){
-
-  const tbody =
-    document.getElementById("tableBody");
-
-  if(!tbody) return;
-
-  const search =
-    document.getElementById("searchInput")
-      .value
-      .toLowerCase()
-      .trim();
-
-  const province =
-    document.getElementById("provinceFilter").value;
-
-  const list =
-    Object.entries(roster || {})
-      .filter(([key,item])=>{
-
-        const text = [
-
-          item.user,
-          item.name,
-          item.province,
-          item.store
-
-        ].join(" ").toLowerCase();
-
-        if(search && !text.includes(search))
-          return false;
-
-        if(province && item.province !== province)
-          return false;
-
-        return true;
-
-      });
-
-
-  let html = "";
-
-  let checked = 0;
-
-  Object.values(roster || {}).forEach(item=>{
-
-    if(attendance[item.user]){
-
-      checked++;
-
-    }
-
-  });
-
-
-  document.getElementById("totalCount").innerText =
-    Object.keys(roster || {}).length;
-
-  document.getElementById("checkedCount").innerText =
-    checked;
-
-  document.getElementById("uncheckedCount").innerText =
-    Object.keys(roster || {}).length - checked;
-
-  const total =
-    Object.keys(roster || {}).length;
-
-  document.getElementById("percentCount").innerText =
-    total ? Math.round(checked/total*100)+"%" : "0%";
-
-
-  if(!list.length){
-
-    tbody.innerHTML =
-      `<tr><td colspan="9" class="empty">
-        Không tìm thấy BOSS.
-      </td></tr>`;
-
-    return;
-
-  }
-
-
-  list.forEach(([key,item],index)=>{
-
-    const record =
-      attendance[item.user];
-
-    const isChecked =
-      !!record;
-
-    const time =
-      record
-        ? new Date(record.timestamp).toLocaleString("vi-VN")
-        : "—";
-
-
-    html += `
-
-      <tr class="${isChecked ? "checked":""}">
-
-        <td>
-          <b>${index+1}</b>
-        </td>
-
-        <td>
-          <b>${escapeHtml(item.user || "")}</b>
-        </td>
-
-        <td>
-          <b>${escapeHtml(item.name || "")}</b>
-        </td>
-
-        <td>
-          ${escapeHtml(item.province || "")}
-        </td>
-
-        <td>
-          ${escapeHtml(item.store || "")}
-        </td>
-
-        <td>
-
-          ${
-            isChecked
-
-            ?
-
-            `<span class="badge badge-ok">
-              ✅ ĐÃ ĐIỂM DANH
-            </span>`
-
-            :
-
-            `<span class="badge badge-no">
-              ⭕ CHƯA
-            </span>`
-          }
-
-        </td>
-
-        <td>
-          ${time}
-        </td>
-
-        <td>
-
-          ${
-            isChecked
-
-            ?
-
-            `<button
-              class="checked-btn"
-              disabled
-            >
-              Đã Check
-            </button>`
-
-            :
-
-            `<button
-              class="check-btn"
-              onclick="checkIn('${escapeJs(item.user)}')"
-              ${isDeadlineOver() ? "disabled":""}
-            >
-              ✅ ĐIỂM DANH
-            </button>`
-          }
-
-        </td>
-
-        <td style="${isAdmin ? "":"display:none"}">
-
-          ${
-            isAdmin
-
-            ?
-
-            `
-            <button
-              class="btn-yellow"
-              onclick="openEditModal('${escapeJs(key)}')"
-            >
-              ✏️
-            </button>
-
-            <button
-              class="btn-red"
-              onclick="deleteBoss('${escapeJs(key)}')"
-            >
-              🗑️
-            </button>
-            `
-
-            :
-
-            ""
-
-          }
-
-        </td>
-
-      </tr>
-
-    `;
-
-  });
-
-
-  tbody.innerHTML = html;
-
-}
-
-
-/* =========================================================
-   CHECK IN
-========================================================= */
-
-async function checkIn(user){
-
-  if(!currentUser){
-
-    alert("Đang kết nối. Vui lòng thử lại.");
-
-    return;
-
-  }
-
-  if(isDeadlineOver()){
-
-    alert("🔴 Đã hết thời gian điểm danh.");
-
-    return;
-
-  }
-
-  if(attendance[user]){
-
-    alert("Bạn đã điểm danh rồi.");
-
-    return;
-
-  }
-
-  const item =
-    Object.values(roster).find(
-      x => String(x.user) === String(user)
-    );
-
-  if(!item){
-
-    alert("Không tìm thấy BOSS.");
-
-    return;
-
-  }
-
-  if(!confirm(
-    "Xác nhận điểm danh:\n\n" +
-    item.name +
-    "\n" +
-    item.store
-  )){
-
-    return;
-
-  }
-
-
-  const data = {
-
-    uid: currentUser.uid,
-
-    user: item.user,
-
-    name: item.name,
-
-    province: item.province,
-
-    store: item.store,
-
-    timestamp: new Date().toISOString(),
-
-    localTime: new Date().toLocaleString("vi-VN")
-
-  };
-
-
-  try{
-
-    await db.ref(
-      "attendance/" +
-      todayKey() +
-      "/" +
-      item.user
-    ).set(data);
-
-    alert(
-      "✅ Điểm danh thành công!\n\n" +
-      item.name +
-      "\n" +
-      new Date().toLocaleString("vi-VN")
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "❌ Không thể điểm danh.\n\n" +
-      "Hãy kiểm tra Firebase Realtime Database."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   MODAL BOSS
-========================================================= */
-
-function openAddModal(){
-
-  if(!isAdmin){
+  if(!admin){
 
     alert("Chỉ ADMIN mới được thêm BOSS.");
 
     return;
+
   }
 
-  document.getElementById("bossModalTitle").innerText =
-    "➕ Thêm BOSS";
+  currentEditKey = null;
 
-  document.getElementById("editKey").value = "";
+  document.getElementById("bossModalTitle").textContent =
+    "＋ THÊM BOSS";
 
-  document.getElementById("bossUser").value = "";
-
+  document.getElementById("bossId").value = "";
   document.getElementById("bossName").value = "";
-
-  document.getElementById("bossProvince").value =
-    "BẠC LIÊU";
-
+  document.getElementById("bossProvince").value = "";
   document.getElementById("bossStore").value = "";
 
-  document.getElementById("bossDisplay").value = "";
-
-  document.getElementById("bossModal").classList.add("show");
+  document.getElementById("bossModal").style.display =
+    "flex";
 
 }
 
 
-function openEditModal(key){
+/* =========================================================
+   SỬA BOSS
+========================================================= */
 
-  if(!isAdmin){
+function editBoss(key){
+
+  if(!admin){
 
     alert("Chỉ ADMIN mới được chỉnh sửa.");
 
     return;
+
   }
 
-  const item = roster[key];
+  const item = roster[key] || {};
 
-  if(!item) return;
+  currentEditKey = key;
 
-  document.getElementById("bossModalTitle").innerText =
-    "✏️ Sửa BOSS";
+  document.getElementById("bossModalTitle").textContent =
+    "✏ SỬA BOSS";
 
-  document.getElementById("editKey").value = key;
-
-  document.getElementById("bossUser").value =
-    item.user || "";
+  document.getElementById("bossId").value =
+    item.user || item.boss || key;
 
   document.getElementById("bossName").value =
     item.name || "";
 
   document.getElementById("bossProvince").value =
-    item.province || "BẠC LIÊU";
+    item.province || "";
 
   document.getElementById("bossStore").value =
     item.store || "";
 
-  document.getElementById("bossDisplay").value =
-    item.name || "";
-
-  document.getElementById("bossModal").classList.add("show");
+  document.getElementById("bossModal").style.display =
+    "flex";
 
 }
 
 
+/* =========================================================
+   LƯU BOSS
+========================================================= */
+
 async function saveBoss(){
 
-  if(!isAdmin){
+  if(!admin){
 
-    alert("Không có quyền.");
+    alert("Chỉ ADMIN mới được chỉnh sửa.");
 
     return;
 
   }
 
 
-  const editKey =
-    document.getElementById("editKey").value;
-
   const user =
-    document.getElementById("bossUser").value.trim();
+    document.getElementById("bossId").value.trim();
 
   const name =
-    document.getElementById("bossDisplay").value.trim()
-    ||
     document.getElementById("bossName").value.trim();
 
   const province =
-    document.getElementById("bossProvince").value;
+    document.getElementById("bossProvince").value.trim();
 
   const store =
     document.getElementById("bossStore").value.trim();
 
 
-  if(!user || !name || !store){
+  if(!user){
 
-    alert("Vui lòng nhập đủ User, Tên và Siêu thị.");
+    alert("Vui lòng nhập User / BOSS.");
 
     return;
 
@@ -1611,13 +1256,14 @@ async function saveBoss(){
 
 
   const key =
-    editKey ||
-    makeKey(name,user);
+    currentEditKey || makeKey(user);
 
 
   const data = {
 
     user:user,
+
+    boss:user,
 
     name:name,
 
@@ -1630,7 +1276,7 @@ async function saveBoss(){
 
   try{
 
-    await db.ref("roster/"+key).set(data);
+    await db.ref("roster/" + key).set(data);
 
     closeModal("bossModal");
 
@@ -1638,11 +1284,9 @@ async function saveBoss(){
 
   }catch(error){
 
-    console.error(error);
-
     alert(
       "❌ Không thể lưu.\n\n" +
-      "Bạn cần kiểm tra Firebase Realtime Database Rules."
+      error.message
     );
 
   }
@@ -1650,27 +1294,13 @@ async function saveBoss(){
 }
 
 
-function makeKey(name,user){
-
-  return (
-    String(name)
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g,"")
-      .replace(/đ/g,"d")
-      .replace(/[^a-z0-9]/g,"_")
-      .replace(/^_+|_+$/g,"")
-    +
-    "_" +
-    user
-  );
-
-}
-
+/* =========================================================
+   XÓA BOSS
+========================================================= */
 
 async function deleteBoss(key){
 
-  if(!isAdmin){
+  if(!admin){
 
     alert("Chỉ ADMIN mới được xóa.");
 
@@ -1678,34 +1308,34 @@ async function deleteBoss(key){
 
   }
 
-  const item = roster[key];
 
-  if(!item) return;
+  const item = roster[key] || {};
+
+  const name =
+    item.name ||
+    item.user ||
+    key;
+
 
   if(!confirm(
     "Xóa BOSS:\n\n" +
-    item.name +
-    "\n" +
-    item.store +
+    name +
     "\n\nBạn chắc chắn?"
-  )){
-
-    return;
-
-  }
+  )) return;
 
 
   try{
 
-    await db.ref("roster/"+key).remove();
+    await db.ref("roster/" + key).remove();
 
     alert("✅ Đã xóa.");
 
   }catch(error){
 
-    console.error(error);
-
-    alert("❌ Không thể xóa.");
+    alert(
+      "❌ Không thể xóa.\n\n" +
+      error.message
+    );
 
   }
 
@@ -1713,12 +1343,12 @@ async function deleteBoss(key){
 
 
 /* =========================================================
-   IMPORT EXCEL
+   NHẬP EXCEL
 ========================================================= */
 
-function importExcel(event){
+async function importExcel(event){
 
-  if(!isAdmin){
+  if(!admin){
 
     alert("Chỉ ADMIN mới được nhập file.");
 
@@ -1729,281 +1359,257 @@ function importExcel(event){
   }
 
 
-  const file =
-    event.target.files[0];
+  const file = event.target.files[0];
 
   if(!file) return;
 
 
-  const reader =
-    new FileReader();
+  try{
+
+    const data = await file.arrayBuffer();
+
+    const workbook =
+      XLSX.read(data,{type:"array"});
+
+    const sheet =
+      workbook.Sheets[workbook.SheetNames[0]];
+
+    const rows =
+      XLSX.utils.sheet_to_json(
+        sheet,
+        {
+          defval:"",
+          raw:false
+        }
+      );
 
 
-  reader.onload = async function(e){
+    if(!rows.length){
 
-    try{
+      alert("❌ File không có dữ liệu.");
 
-      const workbook =
-        XLSX.read(
-          new Uint8Array(e.target.result),
-          {type:"array"}
-        );
+      return;
 
-      const sheet =
-        workbook.Sheets[
-          workbook.SheetNames[0]
-        ];
-
-      const rows =
-        XLSX.utils.sheet_to_json(
-          sheet,
-          {defval:""}
-        );
+    }
 
 
-      if(!rows.length){
+    let count = 0;
 
-        alert("File không có dữ liệu.");
-
-        return;
-
-      }
+    const updates = {};
 
 
-      const newRoster = {};
+    rows.forEach(row=>{
 
-      rows.forEach(row=>{
+      const normalized = {};
 
-        const user =
-          findColumn(
-            row,
-            [
-              "user",
-              "userid",
-              "user id",
-              "mã user",
-              "ma user",
-              "id"
-            ]
-          );
+      Object.keys(row).forEach(k=>{
 
-
-        const name =
-          findColumn(
-            row,
-            [
-              "boss",
-              "tên",
-              "ten",
-              "họ tên",
-              "ho ten",
-              "name"
-            ]
-          );
-
-
-        const province =
-          findColumn(
-            row,
-            [
-              "tỉnh",
-              "tinh",
-              "province"
-            ]
-          );
-
-
-        const store =
-          findColumn(
-            row,
-            [
-              "siêu thị",
-              "sieu thi",
-              "store",
-              "cửa hàng",
-              "cua hang"
-            ]
-          );
-
-
-        if(!user && !name && !store)
-          return;
-
-
-        const finalUser =
-          String(user || "")
-            .trim();
-
-
-        const finalName =
-          String(name || finalUser)
-            .trim();
-
-
-        const finalProvince =
-          String(province || "")
-            .trim();
-
-
-        const finalStore =
-          String(store || "")
-            .trim();
-
-
-        if(!finalUser) return;
-
-
-        const key =
-          makeKey(
-            finalName,
-            finalUser
-          );
-
-
-        newRoster[key] = {
-
-          user:finalUser,
-
-          name:finalName,
-
-          province:finalProvince,
-
-          store:finalStore
-
-        };
+        normalized[
+          String(k)
+            .trim()
+            .toLowerCase()
+        ] = String(row[k] ?? "").trim();
 
       });
 
 
-      const count =
-        Object.keys(newRoster).length;
+      const user =
+        firstValue(normalized,[
+          "user",
+          "userid",
+          "user id",
+          "mã user",
+          "mã nv",
+          "boss",
+          "bôss",
+          "tài khoản"
+        ]);
 
 
-      if(!count){
+      const name =
+        firstValue(normalized,[
+          "tên",
+          "name",
+          "họ tên",
+          "ho ten",
+          "boss name"
+        ]);
 
-        alert(
-          "❌ Không đọc được danh sách.\n\n" +
-          "File cần có cột User, Tên/BOSS và Siêu thị."
-        );
+
+      const province =
+        firstValue(normalized,[
+          "tỉnh",
+          "province",
+          "khu vực"
+        ]);
+
+
+      const store =
+        firstValue(normalized,[
+          "siêu thị",
+          "sieuthi",
+          "siêu thị/cửa hàng",
+          "cửa hàng",
+          "store",
+          "shop",
+          "địa điểm"
+        ]);
+
+
+      /*
+        Nếu cột User chứa:
+        146155 - Đời
+
+        thì tách User + Tên
+      */
+
+      let finalUser = user;
+      let finalName = name;
+
+
+      if(
+        finalUser &&
+        !finalName &&
+        finalUser.includes(" - ")
+      ){
+
+        const parts =
+          finalUser.split(" - ");
+
+        finalUser = parts[0].trim();
+
+        finalName =
+          parts.slice(1).join(" - ").trim();
+
+      }
+
+
+      /*
+        Nếu không tìm được User,
+        thử tìm cột BOSS.
+      */
+
+      if(!finalUser){
 
         return;
 
       }
 
 
-      if(!confirm(
-        "Tìm thấy " +
-        count +
-        " BOSS.\n\n" +
-        "Nhấn OK để thay toàn bộ danh sách hiện tại bằng file này."
-      )){
-
-        return;
-
-      }
+      const key =
+        makeKey(finalUser);
 
 
-      await db.ref("roster").set(newRoster);
+      updates["roster/" + key] = {
+
+        user:finalUser,
+
+        boss:
+          finalUser +
+          (
+            finalName
+            ? " - " + finalName
+            : ""
+          ),
+
+        name:finalName,
+
+        province:province,
+
+        store:store
+
+      };
+
+
+      count++;
+
+    });
+
+
+    if(!count){
 
       alert(
-        "✅ Nhập danh sách thành công!\n\n" +
-        count +
-        " BOSS đã được cập nhật."
+        "❌ Không tìm thấy cột User/BOSS trong file."
       );
 
-
-    }catch(error){
-
-      console.error(error);
-
-      alert(
-        "❌ Không đọc được file Excel."
-      );
+      return;
 
     }
 
-  };
+
+    await db.ref().update(updates);
 
 
-  reader.readAsArrayBuffer(file);
+    event.target.value = "";
 
-  event.target.value = "";
+
+    alert(
+      "✅ Đã nhập " +
+      count +
+      " BOSS lên hệ thống."
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "❌ Lỗi nhập Excel.\n\n" +
+      error.message
+    );
+
+  }
 
 }
 
 
-function findColumn(row,names){
+/* =========================================================
+   TÌM CỘT
+========================================================= */
 
-  const keys =
-    Object.keys(row);
+function firstValue(obj,keys){
 
+  for(const key of keys){
 
-  for(const wanted of names){
+    if(
+      obj[key] !== undefined &&
+      obj[key] !== null &&
+      String(obj[key]).trim() !== ""
+    ){
 
-    const normalizedWanted =
-      normalizeText(wanted);
-
-
-    const found =
-      keys.find(k =>
-        normalizeText(k) === normalizedWanted
-      );
-
-
-    if(found){
-
-      return row[found];
+      return String(obj[key]).trim();
 
     }
 
   }
-
-
-  for(const wanted of names){
-
-    const normalizedWanted =
-      normalizeText(wanted);
-
-
-    const found =
-      keys.find(k =>
-        normalizeText(k)
-          .includes(normalizedWanted)
-      );
-
-
-    if(found){
-
-      return row[found];
-
-    }
-
-  }
-
 
   return "";
 
 }
 
 
-function normalizeText(text){
+/* =========================================================
+   TẠO KEY FIREBASE
+========================================================= */
 
-  return String(text || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .trim();
+function makeKey(text){
+
+  return String(text)
+    .trim()
+    .replace(/[.#$[\]/]/g,"_")
+    .replace(/\s+/g,"_");
 
 }
 
 
 /* =========================================================
-   EXPORT EXCEL
+   XUẤT EXCEL
 ========================================================= */
 
-function exportExcel(){
+async function exportExcel(){
 
-  if(!isAdmin){
+  if(!admin){
 
     alert("Chỉ ADMIN mới được xuất Excel.");
 
@@ -2012,137 +1618,178 @@ function exportExcel(){
   }
 
 
-  const rows = [];
+  try{
+
+    const snap =
+      await db.ref("attendance").once("value");
+
+    const all =
+      snap.val() || {};
 
 
-  Object.values(roster || {}).forEach(item=>{
-
-    const record =
-      attendance[item.user];
+    const rows = [];
 
 
-    rows.push({
+    Object.keys(all).forEach(date=>{
 
-      "Ngày":todayKey(),
+      const day =
+        all[date] || {};
 
-      "User":item.user || "",
 
-      "BOSS / Tên":item.name || "",
+      Object.keys(day).forEach(key=>{
 
-      "Tỉnh":item.province || "",
+        const item =
+          day[key] || {};
 
-      "Siêu thị":item.store || "",
+        const boss =
+          roster[key] || {};
 
-      "Trạng thái":
-        record
-          ? "ĐÃ ĐIỂM DANH"
-          : "CHƯA ĐIỂM DANH",
 
-      "Thời gian":
-        record
-          ? new Date(record.timestamp)
-              .toLocaleString("vi-VN")
-          : "",
+        rows.push({
 
-      "UID":
-        record
-          ? record.uid
-          : ""
+          "Ngày":date,
+
+          "Thời gian":formatTime(item.time),
+
+          "User":
+            item.user ||
+            boss.user ||
+            key,
+
+          "Tên":
+            item.name ||
+            boss.name ||
+            "",
+
+          "Tỉnh":
+            item.province ||
+            boss.province ||
+            "",
+
+          "Siêu thị":
+            shortStore(
+              item.store ||
+              boss.store ||
+              ""
+            ),
+
+          "UID":
+            item.uid ||
+            ""
+
+        });
+
+      });
 
     });
 
-  });
+
+    if(!rows.length){
+
+      alert("Chưa có dữ liệu điểm danh.");
+
+      return;
+
+    }
 
 
-  const worksheet =
-    XLSX.utils.json_to_sheet(rows);
+    rows.sort((a,b)=>{
+
+      return String(b["Thời gian"])
+        .localeCompare(
+          String(a["Thời gian"])
+        );
+
+    });
 
 
-  const workbook =
-    XLSX.utils.book_new();
+    const worksheet =
+      XLSX.utils.json_to_sheet(rows);
 
 
-  XLSX.utils.book_append_sheet(
-    workbook,
-    worksheet,
-    "DiemDanh"
-  );
+    worksheet["!cols"] = [
+
+      {wch:12},
+      {wch:22},
+      {wch:15},
+      {wch:25},
+      {wch:15},
+      {wch:28},
+      {wch:35}
+
+    ];
 
 
-  XLSX.writeFile(
-    workbook,
-    "DIEM_DANH_BOSS_" +
-    todayKey() +
-    ".xlsx"
-  );
+    const workbook =
+      XLSX.utils.book_new();
+
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      "DiemDanh"
+    );
+
+
+    XLSX.writeFile(
+      workbook,
+      "DiemDanh_BOSS_TGDD.xlsx"
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "❌ Không xuất được Excel.\n\n" +
+      error.message
+    );
+
+  }
 
 }
 
 
 /* =========================================================
-   COPY DANH SÁCH CHƯA CHECK
+   XÓA ĐIỂM DANH
 ========================================================= */
 
-function copyUnchecked(){
+async function clearAllAttendance(){
 
-  const arr = [];
+  if(!admin){
 
-
-  Object.values(roster || {}).forEach(item=>{
-
-    if(!attendance[item.user]){
-
-      arr.push(
-        item.name +
-        " - " +
-        item.store
-      );
-
-    }
-
-  });
-
-
-  if(!arr.length){
-
-    alert("Tất cả đã điểm danh.");
+    alert("Chỉ ADMIN mới được thực hiện.");
 
     return;
 
   }
 
 
-  navigator.clipboard.writeText(
-    arr.join("\n")
-  );
+  if(!confirm(
+    "Xóa toàn bộ điểm danh của NGÀY HÔM NAY?\n\n" +
+    todayKey()
+  )) return;
 
 
-  alert("✅ Đã copy danh sách chưa điểm danh.");
+  try{
 
-}
+    await db.ref(
+      "attendance/" + todayKey()
+    ).remove();
 
+    alert("✅ Đã xóa điểm danh hôm nay.");
 
-/* =========================================================
-   ĐỒNG HỒ
-========================================================= */
+  }catch(error){
 
-function updateClock(){
+    alert(
+      "❌ Không thể xóa.\n\n" +
+      error.message
+    );
 
-  const now =
-    new Date();
-
-
-  document.getElementById("clock").innerText =
-    now.toLocaleDateString("vi-VN") +
-    " " +
-    now.toLocaleTimeString("vi-VN");
+  }
 
 }
-
-
-setInterval(updateClock,1000);
-
-updateClock();
 
 
 /* =========================================================
@@ -2151,49 +1798,20 @@ updateClock();
 
 function closeModal(id){
 
-  document
-    .getElementById(id)
-    .classList.remove("show");
+  document.getElementById(id).style.display =
+    "none";
 
 }
 
 
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
+document.querySelectorAll(".modal-bg")
+.forEach(bg=>{
 
-function escapeHtml(value){
+  bg.addEventListener("click",function(e){
 
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    if(e.target === bg){
 
-}
-
-
-function escapeJs(value){
-
-  return String(value || "")
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'");
-
-}
-
-
-/* =========================================================
-   ĐÓNG MODAL KHI BẤM NGOÀI
-========================================================= */
-
-document.querySelectorAll(".modal").forEach(modal=>{
-
-  modal.addEventListener("click",function(e){
-
-    if(e.target === modal){
-
-      modal.classList.remove("show");
+      bg.style.display = "none";
 
     }
 
@@ -2203,25 +1821,28 @@ document.querySelectorAll(".modal").forEach(modal=>{
 
 
 /* =========================================================
-   TỰ ĐỘNG CẬP NHẬT DEADLINE
+   ESCAPE HTML
 ========================================================= */
 
-setInterval(()=>{
+function escapeHtml(value){
 
-  renderDeadline();
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
-  render();
-
-},1000);
+}
 
 
-/* =========================================================
-   KHỞI TẠO DANH SÁCH MẶC ĐỊNH TRÊN MÀN HÌNH
-========================================================= */
+function escapeAttr(value){
 
-roster = DEFAULT_ROSTER;
+  return String(value ?? "")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'");
 
-render();
+}
 
 </script>
 
